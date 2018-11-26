@@ -4,6 +4,8 @@
 #include <ctype.h>
 #define blue  "\033[0;34m"
 
+//int reedAndSort(char **text);
+
 void findBlue (char **text, int *numberOfStr);
 
 void howLetters (char **text, int *numberOfStr);
@@ -17,14 +19,14 @@ int main (){
     char **text = malloc(sizeof(char**));
 
     char func;
+    
     char symbol;
-
     int schet = 0; // счетчик для поиска одинаковых строк
     int j = 0;
     int i = 0;
     int lenStr = 1;
     int numberOfStr = 0;
-
+    
     while (symbol != '\n'){
         
         while ((symbol != '.') && (symbol != '\n')){
@@ -62,7 +64,7 @@ int main (){
         
     }
 
-   // for (i = 0; i< numberOfStr; i++) printf("%s\n",text[i]);
+   for (i = 0; i< numberOfStr; i++) printf("%s\n",text[i]);
 
     printf("Введите номер функции: ");
     scanf("%c", &func);
@@ -90,6 +92,8 @@ int main (){
         case '4':
         printf("ok4\n");
         bubbleSort (text, &numberOfStr);
+        for (i = 0; i < numberOfStr; i++)
+            printf("%s\n",text[i]);
         break;
     }
     
@@ -225,12 +229,5 @@ void bubbleSort (char **text, int *numberOfStr){
             }
         }
     }
-    for (i = 0; i < *numberOfStr; i++) printf("%d.%s ", size[i],text[i]);
-        
-
-
-
-    
-
-
+    free(size);
 }
