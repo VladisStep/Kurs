@@ -64,7 +64,7 @@ int main (){
         
     }
 
-   for (i = 0; i< numberOfStr; i++) printf("%s\n",text[i]);
+   //for (i = 0; i< numberOfStr; i++) printf("%s\n",text[i]);
 
     printf("Введите номер функции: ");
     scanf("%c", &func);
@@ -79,7 +79,7 @@ int main (){
 
         case '2':
         printf("ok2\n");
-        //howLetters(text, &numberOfStr);
+        howLetters(text, &numberOfStr);
         break;
 
         case '3':
@@ -131,14 +131,14 @@ void findBlue (char **text, int *numberOfStr){
 
 
 
-/*void howLetters (char **text, int *numberOfStr){
+void howLetters (char **text, int *numberOfStr){
     int i = 0; 
     int j = 0;
     int t = 1;
     int how = 1;
     int schet = 1;
     int lenStr = 0;
-    char *newStr = malloc(sizeof(char*));
+    char *newStr = malloc(sizeof(char));
     char symb;
 
     char test [100] = "";
@@ -149,19 +149,16 @@ void findBlue (char **text, int *numberOfStr){
             if ((tolower(text[i][j]) == tolower(text[i][j+1])) && isalpha(text[i][j])){
                 while ((tolower(text[i][j]) == tolower(text[i][j+1])) && isalpha(text[i][j])){
                     schet++;
-                    //printf("%d ",j);
                     j++;
                 }       
-                //printf("%d%c ", schet,toupper(text[i][j]));
-                //printf("%d ",schet);
                 while (schet > t)
                     t *= 10;
                     how++;
                 lenStr += how+1;
-               printf(" lenStr = %d, t = %d how = %d\n", lenStr,t, how);
-               newStr = (char*) realloc(*newStr,lenStr*sizeof(char));
+               newStr = (char*) realloc(newStr,lenStr*sizeof(char));
+               //printf("%d.", lenStr -1);
                newStr[lenStr - 1] = 'a';
-               printf("[%ld] %s\n", sizeof(newStr), newStr);
+              // printf("%c ", newStr[lenStr - 1]);
                 how = 1;
                 t = 1;
                 schet = 1;
@@ -169,8 +166,12 @@ void findBlue (char **text, int *numberOfStr){
         }
     
     }
+   /* printf("\n%s\n", *newStr);
+   for (i = 0; i < lenStr; i++)
+        printf("%c", newStr[i]);*/
+
 }
-*/
+
 
 void deletthree (char **text, int *numberOfStr){
     int i = 0;
