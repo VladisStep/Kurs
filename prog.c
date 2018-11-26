@@ -10,6 +10,8 @@ void howLetters (char **text, int *numberOfStr);
 
 void deletthree (char **text, int *numberOfStr);
 
+void bubbleSort (char **text, int *numberOfStr);
+
 int main (){
     char *string = malloc(sizeof(char*));
     char **text = malloc(sizeof(char**));
@@ -87,6 +89,7 @@ int main (){
 
         case '4':
         printf("ok4\n");
+        bubbleSort (text, &numberOfStr);
         break;
     }
     
@@ -185,4 +188,49 @@ void deletthree (char **text, int *numberOfStr){
         }
         howWord = 1;
     }
+}
+
+
+
+void bubbleSort (char **text, int *numberOfStr){
+    int i = 0;
+    int j = 0;
+    int save = 0;
+    char *keepStr;
+    int *size = calloc(*numberOfStr,sizeof(int));
+    char space[] = " ";
+    char *haveSpace;
+
+    for (i = 0; i < *numberOfStr; i++){
+        haveSpace = strstr(text[i], space);
+        if( haveSpace == NULL)
+            size[i] = strlen(text[i])-1;
+        else{
+            for (j = 0;((text[i][j] != ' ') && (text[i][j] != '.') && (text[i][j] != ',')); j++)
+                size[i]++;
+            for (j = strlen(text[i])-2;((text[i][j] != ' ') && (text[i][j] != ',')); j--)
+                size[i]++;
+        }
+    }
+    for (i = 0; i < *numberOfStr-1; i++){
+        for (j = 0; j < *numberOfStr-1; j++){
+            if (size[j] > size[j+1]){
+                save = size[j];
+                size[j] = size[j+1];
+                size[j+1] = save;
+
+                keepStr = text[j];
+                text[j] = text[j+1];
+                text[j+1] = keepStr;
+            }
+        }
+    }
+    for (i = 0; i < *numberOfStr; i++) printf("%d.%s ", size[i],text[i]);
+        
+
+
+
+    
+
+
 }
