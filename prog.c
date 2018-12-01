@@ -14,6 +14,9 @@ void deletthree (char **text, int *numberOfStr);
 
 void bubbleSort (char **text, int *numberOfStr);
 
+void char2int (int howWord, char *doStr);
+
+
 int main (){
     char *string = malloc(sizeof(char*));
     char **text = malloc(sizeof(char**));
@@ -80,6 +83,8 @@ int main (){
         case '2':
         printf("ok2\n");
         howLetters(text, &numberOfStr);
+        for (i = 0; i < numberOfStr; i++)
+            printf("%s\n",text[i]);
         break;
 
         case '3':
@@ -132,44 +137,43 @@ void findBlue (char **text, int *numberOfStr){
 
 
 void howLetters (char **text, int *numberOfStr){
-    int i = 0; 
+    int i = 0;
     int j = 0;
-    int t = 1;
-    int how = 1;
-    int schet = 1;
-    int lenStr = 0;
-    char *newStr = malloc(sizeof(char));
-    char symb;
-
-    char test [100] = "";
-
+    int k = 0;
+    int howWord = 1;
+    int lenNewStr = 0;
 
     for (i = 0; i < *numberOfStr; i++){
-        for (j = 0; j < strlen(text[i])-1; j++){
-            if ((tolower(text[i][j]) == tolower(text[i][j+1])) && isalpha(text[i][j])){
-                while ((tolower(text[i][j]) == tolower(text[i][j+1])) && isalpha(text[i][j])){
-                    schet++;
-                    j++;
-                }       
-                while (schet > t)
-                    t *= 10;
-                    how++;
-                lenStr += how+1;
-               newStr = (char*) realloc(newStr,lenStr*sizeof(char));
-               //printf("%d.", lenStr -1);
-               newStr[lenStr - 1] = 'a';
-              // printf("%c ", newStr[lenStr - 1]);
-                how = 1;
-                t = 1;
-                schet = 1;
+        char *newStr = (char*) malloc(sizeof(char));
+        for ( j = 0; j < strlen(text[i]); j++){
+            lenNewStr++;
+            while(tolower(text[i][j]) == tolower(text[i][j+1])){
+                howWord++;
+                j++;
             }
+            if(howWord > 1){
+                char *doStr = (char*) malloc(sizeof(char));
+                char2int(howWord, doStr);   
+                newStr = (char*)realloc(newStr,(lenNewStr + strlen(doStr))*sizeof(char)+1);
+                for(k = 0; k < strlen(doStr); k++){
+                    newStr[lenNewStr - 1 + k] = doStr[k];
+                }
+                lenNewStr += strlen(doStr);
+                newStr[lenNewStr -1] = toupper(text[i][j]);
+                free(doStr);
+            }
+            else{
+                newStr = (char*)realloc(newStr,lenNewStr*sizeof(char)+1);
+                newStr[lenNewStr -1] = text[i][j];
+            }
+          howWord = 1;
         }
-    
-    }
-   /* printf("\n%s\n", *newStr);
-   for (i = 0; i < lenStr; i++)
-        printf("%c", newStr[i]);*/
-
+        newStr[lenNewStr] = '\0';
+        free(text[i]);
+        text[i] = newStr;
+        newStr = NULL;
+        lenNewStr = 0; 
+    } 
 }
 
 
@@ -231,4 +235,24 @@ void bubbleSort (char **text, int *numberOfStr){
         }
     }
     free(size);
+}
+
+void char2int(int howWord,char *doStr){
+    int i = 0;
+    int j = 0;
+    char c;
+    while(howWord > 0){
+        i++;
+        doStr =(char*)realloc(doStr, i*sizeof(char)+1);
+        doStr[i-1] = '0' + howWord % 10;
+        howWord = howWord / 10;
+        doStr[i] ='\0';  
+    } 
+    while( j < i){
+        i--;
+        c = doStr[j];
+        doStr [j] = doStr[i];
+        doStr[i] = c;
+        j++;
+    }
 }
