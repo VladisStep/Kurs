@@ -6,7 +6,7 @@
 
 int reedAndSort(int *numberOfStr, char ***text);
 
-void menu(char **text, int numberOfStr);
+int menu(char **text, int numberOfStr);
 
 void findBlue (char **text, int *numberOfStr);
 
@@ -23,56 +23,11 @@ int main (){
     int numberOfStr = 0 ;
     char **text;
     int i = 0;
-   /* char *string = malloc(sizeof(char*));
-    char symbol;
-    int schet = 0; // счетчик для поиска одинаковых строк
-    int j = 0;
-    int i = 0;
-    int lenStr = 1;
-    
-    
-    while (symbol != '\n'){
-        
-        while ((symbol != '.') && (symbol != '\n')){
-            symbol = getchar();
-            lenStr++;
-            string = (char *)realloc(string, lenStr*sizeof(string));
-            string[lenStr - 2] = symbol;  
-        }
-        symbol = getchar();
-        string[lenStr - 1] = '\0';
-
-        for (i = 0; i < numberOfStr; i++){
-            if (strlen(string) == strlen(text[i])){
-                for(j = 0; j < strlen(string); j++){
-                    if (tolower(string[j]) == tolower(text[i][j]))
-                        schet++;
-                }
-                if (schet == strlen(string))
-                    break;
-                else 
-                    schet = 0;            
-            }
-        }
-        if (schet != strlen(string)){      
-            numberOfStr++;
-            text = (char**)realloc(text, numberOfStr*sizeof(char*));
-            text[numberOfStr - 1] = (char*)realloc(text[numberOfStr - 1], strlen(string)*sizeof(char)+1);
-            strcpy(text[numberOfStr - 1], string);
-        }
-        schet = 0;
-        free(string);
-        string = NULL;
-        lenStr = 1;
-
-        
-    }*/
     reedAndSort(&numberOfStr, &text);
     menu(text,numberOfStr);
     for (i = 0; i < numberOfStr; i++)
         free(text[i]);
     free(text);
-
 return 0;
 }
 
@@ -126,7 +81,7 @@ int reedAndSort(int *numberOfStr, char ***text){
     return 0;
 }
 
-void menu(char **text, int numberOfStr){
+int menu(char **text, int numberOfStr){
     char func;
     int i = 0;
 
@@ -169,6 +124,7 @@ void menu(char **text, int numberOfStr){
 
          case '0':
         printf("ok0\n");
+        return 0;
         break;
     }
     
@@ -196,8 +152,6 @@ void findBlue (char **text, int *numberOfStr){
         }
     }
 }
-
-
 
 
 void howLetters (char **text, int *numberOfStr){
@@ -247,7 +201,8 @@ void deletthree (char **text, int *numberOfStr){
     int howWord = 1;
 
     for (i = 0; i < *numberOfStr; i++){  
-        for(j = 0; j < strlen(text[i]);j++){
+        j = (text[i][0] == ' ') ? 1 : 0;
+        for(j; j < strlen(text[i]);j++){
             if (text[i][j] == ' ')
                 howWord++;
         }
@@ -275,17 +230,24 @@ void bubbleSort (char **text, int *numberOfStr){
     char *haveSpace;
 
     for (i = 0; i < *numberOfStr; i++){
+        text[i][0] = (text[i][0] != ' ') ? :'*';
         haveSpace = strstr(text[i], space);
-        if( haveSpace == NULL)
+        if(haveSpace == NULL){
             size[i] = strlen(text[i])-1;
-        else{
-            for (j = 0;((text[i][j] != ' ') && (text[i][j] != '.') && (text[i][j] != ',')); j++)
-                size[i]++;
-            for (j = strlen(text[i])-2;((text[i][j] != ' ') && (text[i][j] != ',')); j--)
-                size[i]++;
+            text[i][0] = (text[i][0] != '*') ? :' ';
         }
-    }
+        else
+            {
+                j = (text[i][0] == '*') ? 1 : 0;
+                text[i][0] = (text[i][0] != '*') ? :' ';
+                for (j;((text[i][j] != ' ') && (text[i][j] != ',')); j++)
+                    size[i]++;
+                for (j = strlen(text[i])-2;(text[i][j] != ' '); j--)
+                    size[i]++;
+                }
+        }
     for (i = 0; i < *numberOfStr-1; i++){
+
         for (j = 0; j < *numberOfStr-1; j++){
             if (size[j] > size[j+1]){
                 save = size[j];
