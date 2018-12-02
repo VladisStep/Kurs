@@ -18,26 +18,26 @@ void bubbleSort (char **text, int *numberOfStr);
 
 void char2int (int howWord, char *doStr);
 
-
 int main (){
     int numberOfStr = 0 ;
     char **text;
     int i = 0;
+    
     reedAndSort(&numberOfStr, &text);
-    menu(text,numberOfStr);
+    numberOfStr = menu(text,numberOfStr);
+    
     for (i = 0; i < numberOfStr; i++)
         free(text[i]);
     free(text);
+
 return 0;
 }
 
 int reedAndSort(int *numberOfStr, char ***text){
 
     *text = 0;
-   
     char c;
     char* str = 0;
-
     int i = 0;
     int j = 0;
     int numOfStr = 0;
@@ -75,7 +75,6 @@ int reedAndSort(int *numberOfStr, char ***text){
 
     if (freeStr)
         free(str);
-    //for (i = numOfStr-1; i > 0; i--) printf("%s\n", (*text)[i]);
     *numberOfStr = numOfStr;
 
     return 0;
@@ -84,7 +83,13 @@ int reedAndSort(int *numberOfStr, char ***text){
 int menu(char **text, int numberOfStr){
     char func;
     int i = 0;
-
+    
+    printf("1 - Вывести каждое предложение, и если в нем есть словосочетание “define BLUE”, то все слова после этого словосочетания вывести голубым цветом.\n");
+    printf("2 - Во всем тексте заменить последовательность подряд идущих букв без учета регистра подстрокой вида “<кол-во подряд идущих букв><буква в верхнем регистре>”.\n");
+    printf("3 - Удалить все предложения в которых количество слов кратно трем.\n");
+    printf("4 - Отсортировать предложения по уменьшению суммарной длины первого и последнего слова. Если в предложении одно слово, то необходимо брать длину этого слова.\n");
+    printf("P - Вывести массив строк\n");
+    printf("0 - Завершить программу\n");
     start:
     printf("Введите номер функции: ");
     scanf("%s", &func);
@@ -93,41 +98,40 @@ int menu(char **text, int numberOfStr){
     switch(func){
 
         case '1':
-        printf("ok1\n");
-        findBlue(text, &numberOfStr);
-        goto start;
+            findBlue(text, &numberOfStr);
+            goto start;
         break;
 
         case '2':
-        printf("ok2\n");
-        howLetters(text, &numberOfStr);
-        for (i = 0; i < numberOfStr; i++)
-            printf("%s\n",text[i]);
-        goto start;
+            howLetters(text, &numberOfStr);
+            goto start;
         break;
 
         case '3':
-        printf("ok3\n");
-        deletthree (text, &numberOfStr);
-        for (i = 0; i < numberOfStr; i++)
-            printf("%s\n",text[i]);
-        goto start;
+            deletthree (text, &numberOfStr);
+            goto start;
         break;
 
         case '4':
-        printf("ok4\n");
-        bubbleSort (text, &numberOfStr);
-        for (i = 0; i < numberOfStr; i++)
-            printf("%s\n",text[i]);
-        goto start;
+            bubbleSort (text, &numberOfStr);
+            goto start;
         break;
 
-         case '0':
-        printf("ok0\n");
-        return 0;
+        case 'P':
+            for (i = 0; i < numberOfStr; i++)
+                printf("%s\n",text[i]); 
+            goto start;
+        break;
+
+        case '0':
+        break;
+
+        default:
+            printf("\033[0;31mФункции %c не существует\n\033[0m", func);
+            goto start;
         break;
     }
-    
+    return numberOfStr;
 }
 
 void findBlue (char **text, int *numberOfStr){
@@ -194,7 +198,6 @@ void howLetters (char **text, int *numberOfStr){
     } 
 }
 
-
 void deletthree (char **text, int *numberOfStr){
     int i = 0;
     int j = 0;
@@ -217,8 +220,6 @@ void deletthree (char **text, int *numberOfStr){
         howWord = 1;
     }
 }
-
-
 
 void bubbleSort (char **text, int *numberOfStr){
     int i = 0;
