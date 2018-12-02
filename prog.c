@@ -4,7 +4,7 @@
 #include <ctype.h>
 #define blue  "\033[0;34m"
 
-//int reedAndSort(int *numberOfStr);
+int reedAndSort(int *numberOfStr, char ***text);
 
 void menu(char **text, int numberOfStr);
 
@@ -21,8 +21,9 @@ void char2int (int howWord, char *doStr);
 
 int main (){
     int numberOfStr = 0 ;
-    char **text = malloc(sizeof(char**));
-    char *string = malloc(sizeof(char*));
+    char **text;
+    int i = 0;
+   /* char *string = malloc(sizeof(char*));
     char symbol;
     int schet = 0; // счетчик для поиска одинаковых строк
     int j = 0;
@@ -65,8 +66,8 @@ int main (){
         lenStr = 1;
 
         
-    }
-
+    }*/
+    reedAndSort(&numberOfStr, &text);
     menu(text,numberOfStr);
     for (i = 0; i < numberOfStr; i++)
         free(text[i]);
@@ -75,7 +76,55 @@ int main (){
 return 0;
 }
 
-//int reedAndSort(){}
+int reedAndSort(int *numberOfStr, char ***text){
+
+    *text = 0;
+   
+    char c;
+    char* str = 0;
+
+    int i = 0;
+    int j = 0;
+    int numOfStr = 0;
+    int lenStr = 0;
+    int freeStr = 0;
+    
+    do{
+        c = getchar();
+        
+        if (c != EOF){
+            str = realloc(str,++lenStr*sizeof(char)+1);
+            str[lenStr - 1] = c;
+        }
+
+        if (c == '.' || c =='\n' || c == EOF){
+            freeStr = 1;
+            if (lenStr > 1){
+                str[lenStr] = '\0';
+                i = 0;
+                while (i < numOfStr) 
+                    if (strcasecmp(str, (*text)[i++]) == 0)
+                        break;
+            
+                if(i == numOfStr){
+                *text = realloc(*text,++numOfStr*sizeof(char*));
+                (*text)[numOfStr - 1] = str;
+                str = 0;
+                freeStr = 0;
+                }
+                
+            }
+            lenStr = 0;
+        }
+    }while(c != '\n' && c!= EOF); 
+
+    if (freeStr)
+        free(str);
+    //for (i = numOfStr-1; i > 0; i--) printf("%s\n", (*text)[i]);
+    *numberOfStr = numOfStr;
+
+    return 0;
+}
 
 void menu(char **text, int numberOfStr){
     char func;

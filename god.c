@@ -9,54 +9,57 @@ int main(){
     int i = 0;
     char **text;
     int numberOfStr = 0;
-    reedAndSort (&numberOfStr, &text) ;
+    reedAndSort (&numberOfStr, &text);
+    for (i = 0; i< numberOfStr; i++) printf("%d. %s\n",i, text[i]);
+    
     
 }
 
 int reedAndSort (int *numberOfStr, char ***text){
-    text = malloc(sizeof(char**));
-    char *string = malloc(sizeof(char*));
-    char symbol;
-    int schet = 0; // счетчик для поиска одинаковых строк
-    int j = 0;
+    *text = 0;
+   
+    char c;
+    char* str = 0;
+
     int i = 0;
-    int lenStr = 1;
+    int j = 0;
+    int numOfStr = 0;
+    int lenStr = 0;
+    int freeStr = 0;
     
-    
-    while (symbol != '\n'){
+    do{
+        c = getchar();
         
-        while ((symbol != '.') && (symbol != '\n')){
-            symbol = getchar();
-            lenStr++;
-            string = (char *)realloc(string, lenStr*sizeof(string));
-            string[lenStr - 2] = symbol;  
+        if (c != EOF){
+            str = realloc(str,++lenStr*sizeof(char)+1);
+            str[lenStr - 1] = c;
         }
-        symbol = getchar();
-        string[lenStr - 1] = '\0';
 
-        for (i = 0; i < *numberOfStr; i++){
-            if (strlen(string) == strlen(text[i])){
-                for(j = 0; j < strlen(string); j++){
-                    if (tolower(string[j]) == tolower(text[i][j]))
-                        schet++;
+        if (c == '.' || c =='\n' || c == EOF){
+            freeStr = 1;
+            if (lenStr > 1){
+                str[lenStr] = '\0';
+                i = 0;
+                while (i < numOfStr) 
+                    if (strcasecmp(str, (*text)[i++]) == 0)
+                        break;
+            
+                if(i == numOfStr){
+                *text = realloc(*text,++numOfStr*sizeof(char*));
+                (*text)[numOfStr - 1] = str;
+                str = 0;
+                freeStr = 0;
                 }
-                if (schet == strlen(string))
-                    break;
-                else 
-                    schet = 0;            
+                
             }
+            lenStr = 0;
         }
-        if (schet != strlen(string)){      
-            *numberOfStr++;
-            text = (char**)realloc(text, *numberOfStr*sizeof(char*));
-            text[*numberOfStr - 1] = (char*)realloc(text[*numberOfStr - 1], strlen(string)*sizeof(char)+1);
-            strcpy(text[*numberOfStr - 1], string);
-        }
-        schet = 0;
-        free(string);
-        string = NULL;
-        lenStr = 1;
-        //for(i = 0; i < *numberOfStr; i++) printf("%s\n", *text[i]);   
-    }
+    }while(c != '\n' && c!= EOF); 
 
+    if (freeStr)
+        free(str);
+    //for (i = numOfStr-1; i > 0; i--) printf("%s\n", (*text)[i]);
+    *numberOfStr = numOfStr;
+
+    return 0;
 }
