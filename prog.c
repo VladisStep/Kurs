@@ -4,7 +4,7 @@
 #include <ctype.h>
 #define blue  "\033[0;34m"
 
-int reedAndSort(int *numberOfStr, char ***text);
+int readAndProcess(int *numberOfStr, char ***text);
 
 int menu(char **text, int numberOfStr);
 
@@ -16,14 +16,16 @@ void deletthree (char **text, int *numberOfStr);
 
 void bubbleSort (char **text, int *numberOfStr);
 
-void char2int (int howWord, char *doStr);
+void int2char (int howWord, char *doStr);
+
+int comp (const void *a, const void *b);
 
 int main (){
     int numberOfStr = 0 ;
     char **text;
     int i = 0;
     
-    reedAndSort(&numberOfStr, &text);
+    readAndProcess(&numberOfStr, &text);
     numberOfStr = menu(text,numberOfStr);
     
     for (i = 0; i < numberOfStr; i++)
@@ -33,7 +35,7 @@ int main (){
 return 0;
 }
 
-int reedAndSort(int *numberOfStr, char ***text){
+int readAndProcess(int *numberOfStr, char ***text){
 
     *text = 0;
     char c;
@@ -113,7 +115,7 @@ int menu(char **text, int numberOfStr){
         break;
 
         case '4':
-            bubbleSort (text, &numberOfStr);
+            qsort(text,numberOfStr,sizeof(*text),comp);
             goto start;
         break;
 
@@ -136,17 +138,17 @@ int menu(char **text, int numberOfStr){
 
 void findBlue (char **text, int *numberOfStr){
     char find[] = "define BLUE";
-    char *istr;
+    char *haveDef;
     int i = 0;
     int j = 0;
     int ind = 0;
     
-    for(i=0; i < *numberOfStr; i++){
-        istr = strstr(text[i],find);
-        if ( istr == NULL)
+    for(i = 0; i < *numberOfStr; i++){
+        haveDef = strstr(text[i],find);
+        if ( haveDef == NULL)
             printf ("%s\n",text[i]);
         else{
-            ind = (int)(istr - text[i]+11);
+            ind = (int)(haveDef - text[i]+11);
             for(j = 0; j < strlen(text[i]); j++){
                 if (ind == j)
                     printf(blue);
@@ -156,7 +158,6 @@ void findBlue (char **text, int *numberOfStr){
         }
     }
 }
-
 
 void howLetters (char **text, int *numberOfStr){
     int i = 0;
@@ -169,13 +170,13 @@ void howLetters (char **text, int *numberOfStr){
         char *newStr = (char*) malloc(sizeof(char));
         for ( j = 0; j < strlen(text[i]); j++){
             lenNewStr++;
-            while(tolower(text[i][j]) == tolower(text[i][j+1])){
+            while(tolower(text[i][j]) == tolower(text[i][j+1]) && isalpha(text[i][j])){
                 howWord++;
                 j++;
             }
             if(howWord > 1){
                 char *doStr = (char*) malloc(sizeof(char));
-                char2int(howWord, doStr);   
+                int2char(howWord, doStr);   
                 newStr = (char*)realloc(newStr,(lenNewStr + strlen(doStr))*sizeof(char)+1);
                 for(k = 0; k < strlen(doStr); k++){
                     newStr[lenNewStr - 1 + k] = doStr[k];
@@ -221,50 +222,8 @@ void deletthree (char **text, int *numberOfStr){
     }
 }
 
-void bubbleSort (char **text, int *numberOfStr){
-    int i = 0;
-    int j = 0;
-    int save = 0;
-    char *keepStr;
-    int *size = calloc(*numberOfStr,sizeof(int));
-    char space[] = " ";
-    char *haveSpace;
 
-    for (i = 0; i < *numberOfStr; i++){
-        text[i][0] = (text[i][0] != ' ') ? :'*';
-        haveSpace = strstr(text[i], space);
-        if(haveSpace == NULL){
-            size[i] = strlen(text[i])-1;
-            text[i][0] = (text[i][0] != '*') ? :' ';
-        }
-        else
-            {
-                j = (text[i][0] == '*') ? 1 : 0;
-                text[i][0] = (text[i][0] != '*') ? :' ';
-                for (j;((text[i][j] != ' ') && (text[i][j] != ',')); j++)
-                    size[i]++;
-                for (j = strlen(text[i])-2;(text[i][j] != ' '); j--)
-                    size[i]++;
-                }
-        }
-    for (i = 0; i < *numberOfStr-1; i++){
-
-        for (j = 0; j < *numberOfStr-1; j++){
-            if (size[j] > size[j+1]){
-                save = size[j];
-                size[j] = size[j+1];
-                size[j+1] = save;
-
-                keepStr = text[j];
-                text[j] = text[j+1];
-                text[j+1] = keepStr;
-            }
-        }
-    }
-    free(size);
-}
-
-void char2int(int howWord,char *doStr){
+void int2char(int howWord, char *doStr){
     int i = 0;
     int j = 0;
     char c;
@@ -282,4 +241,34 @@ void char2int(int howWord,char *doStr){
         doStr[i] = c;
         j++;
     }
+}
+
+int comp (const void *a, const void *b){
+    int howA = 0;
+    int howB = 0;
+    int j = 0;
+    const char *str_a = *(const char *const *) a; 
+    const char *str_b = *(const char *const *) b;
+
+    j = (str_a[0] == ' ') ? 1 : 0;
+    for (j;str_a[j] != ' ' && str_a[j] != ','; j++)
+        howA++;
+    for (j = strlen(str_a)-2;str_a[j] != ' '; j--)
+        howA++;
+    if (howA > strlen(str_a))
+        howA = strlen(str_a)-2;
+    
+    j = (str_b[0] == ' ') ? 1 : 0;
+    for (j;str_b[j] != ' ' && str_b[j] != ','; j++)
+        howB++;
+    for (j = strlen(str_b)-2;str_b[j] != ' '; j--)
+        howB++;
+    if (howB > strlen(str_b))
+        howB = strlen(str_b)-2;
+    if(howA > howB)
+        return 1;
+    if (howA < howB)
+        return -1;
+    if (howA == howB)
+        return 0;
 }
