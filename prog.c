@@ -4,7 +4,7 @@
 #include <ctype.h>
 #define blue  "\033[0;34m"
 
-int readAndProcess(int *numberOfStr, char ***text);
+int readAndProcess(char ***text);
 
 int menu(char **text, int numberOfStr);
 
@@ -18,13 +18,15 @@ void int2char (int howWord, char *doStr);
 
 int comp (const void *a, const void *b);
 
+void print(char **text, int *numberOfStr);
+
 int main (){
-    int numberOfStr = 0 ;
+    
     char **text;
     int i = 0;
-    
-    readAndProcess(&numberOfStr, &text);
-    numberOfStr = menu(text,numberOfStr);
+    printf("\033[1;32mВведите текст для обработки\n\033[0m");
+    int numberOfStr = readAndProcess(&text);
+    numberOfStr = menu(text, numberOfStr);
     
     for (i = 0; i < numberOfStr; i++)
         free(text[i]);
@@ -33,7 +35,7 @@ int main (){
 return 0;
 }
 
-int readAndProcess(int *numberOfStr, char ***text){
+int readAndProcess(char ***text){
 
     *text = 0;
     char c;
@@ -41,7 +43,7 @@ int readAndProcess(int *numberOfStr, char ***text){
     int i = 0;
     int j = 0;
     int numOfStr = 0;
-    int lenStr = 0;
+    int lenStr = 0; 
     int freeStr = 0;
     
     do{
@@ -75,62 +77,57 @@ int readAndProcess(int *numberOfStr, char ***text){
 
     if (freeStr)
         free(str);
-    *numberOfStr = numOfStr;
+ 
+    return numOfStr;
 
-    return 0;
 }
 
 int menu(char **text, int numberOfStr){
     char func;
     int i = 0;
-    
+    printf("\033[1;32mВыберете одну из предложенных функции\n\033[0m");
     printf("1 - Вывести каждое предложение, и если в нем есть словосочетание “define BLUE”, то все слова после этого словосочетания вывести голубым цветом.\n");
     printf("2 - Во всем тексте заменить последовательность подряд идущих букв без учета регистра подстрокой вида “<кол-во подряд идущих букв><буква в верхнем регистре>”.\n");
     printf("3 - Удалить все предложения в которых количество слов кратно трем.\n");
     printf("4 - Отсортировать предложения по уменьшению суммарной длины первого и последнего слова. Если в предложении одно слово, то необходимо брать длину этого слова.\n");
     printf("P - Вывести массив строк\n");
     printf("0 - Завершить программу\n");
-    start:
-    printf("Введите номер функции: ");
-    scanf("%s", &func);
-    printf("    выбранная функция -> %c\n",func);
+    do{
+        printf("\033[1;32mВведите номер функции\n\033[0m");
+        scanf("%s", &func);
+        printf("\tвыбранная функция -> \033[0;32m%c\n\033[0m",func);
 
-    switch(func){
+        switch(func){
 
-        case '1':
-            findBlue(text, &numberOfStr);
-            goto start;
-        break;
+            case '1':
+                findBlue(text, &numberOfStr);
+            break;
 
-        case '2':
-            howLetters(text, &numberOfStr);
-            goto start;
-        break;
+            case '2':
+                howLetters(text, &numberOfStr);
+            break;
 
-        case '3':
-            deletThree (text, &numberOfStr);
-            goto start;
-        break;
+            case '3':
+                deletThree (text, &numberOfStr);
+            break;
 
-        case '4':
-            qsort(text,numberOfStr,sizeof(*text),comp);
-            goto start;
-        break;
+            case '4':
+                qsort(text,numberOfStr,sizeof(*text),comp);
+            break;
 
-        case 'P':
-            for (i = 0; i < numberOfStr; i++)
-                printf("%s\n",text[i]); 
-            goto start;
-        break;
+            case 'P':
+                print(text, &numberOfStr);
+            break;
 
-        case '0':
-        break;
+            case '0':
+            printf("\033[0;32mПока, мир\n\033[0m");
+            break;
 
-        default:
-            printf("\033[0;31mФункции %c не существует\n\033[0m", func);
-            goto start;
-        break;
-    }
+            default:
+                printf("\033[0;31mФункции %c не существует\n\033[0m", func);
+            break;
+        }
+    }while (func != '0');
     return numberOfStr;
 }
 
@@ -268,11 +265,16 @@ int comp (const void *a, const void *b){
     else
         if (howB > strlen(str_b))
             howB = strlen(str_b)-1;
-;
     if(howA > howB)
         return 1;
     if (howA < howB)
         return -1;
     if (howA == howB)
         return 0;
+}
+
+void print(char **text, int *numberOfStr){
+    int i = 0;
+    for (i = 0; i < *numberOfStr; i++)
+        printf("%s\n",text[i]); 
 }
