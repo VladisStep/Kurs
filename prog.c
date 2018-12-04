@@ -12,9 +12,7 @@ void findBlue (char **text, int *numberOfStr);
 
 void howLetters (char **text, int *numberOfStr);
 
-void deletthree (char **text, int *numberOfStr);
-
-void bubbleSort (char **text, int *numberOfStr);
+void deletThree (char **text, int *numberOfStr);
 
 void int2char (int howWord, char *doStr);
 
@@ -110,7 +108,7 @@ int menu(char **text, int numberOfStr){
         break;
 
         case '3':
-            deletthree (text, &numberOfStr);
+            deletThree (text, &numberOfStr);
             goto start;
         break;
 
@@ -199,7 +197,7 @@ void howLetters (char **text, int *numberOfStr){
     } 
 }
 
-void deletthree (char **text, int *numberOfStr){
+void deletThree (char **text, int *numberOfStr){
     int i = 0;
     int j = 0;
     int howWord = 1;
@@ -222,7 +220,6 @@ void deletthree (char **text, int *numberOfStr){
     }
 }
 
-
 void int2char(int howWord, char *doStr){
     int i = 0;
     int j = 0;
@@ -231,9 +228,9 @@ void int2char(int howWord, char *doStr){
         i++;
         doStr =(char*)realloc(doStr, i*sizeof(char)+1);
         doStr[i-1] = '0' + howWord % 10;
-        howWord = howWord / 10;
-        doStr[i] ='\0';  
+        howWord = howWord / 10;   
     } 
+    doStr[i] ='\0';
     while( j < i){
         i--;
         c = doStr[j];
@@ -255,16 +252,23 @@ int comp (const void *a, const void *b){
         howA++;
     for (j = strlen(str_a)-2;str_a[j] != ' '; j--)
         howA++;
-    if (howA > strlen(str_a))
+    if (howA > strlen(str_a)-2 && str_a[0] == ' ')
         howA = strlen(str_a)-2;
+    else
+        if (howA > strlen(str_a)-1)
+        howA = strlen(str_a)-1;
     
     j = (str_b[0] == ' ') ? 1 : 0;
     for (j;str_b[j] != ' ' && str_b[j] != ','; j++)
         howB++;
     for (j = strlen(str_b)-2;str_b[j] != ' '; j--)
         howB++;
-    if (howB > strlen(str_b))
+    if (howB > strlen(str_b)-2 && str_b[0] == ' ')
         howB = strlen(str_b)-2;
+    else
+        if (howB > strlen(str_b))
+            howB = strlen(str_b)-1;
+;
     if(howA > howB)
         return 1;
     if (howA < howB)

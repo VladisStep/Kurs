@@ -80,10 +80,8 @@ int comp (const void *a, const void *b){
     int c = 0;
     int d = 0;
     int j = 0;
-    const char 
-    *str_a = *(const char *const *) a, 
-    *str_b = *(const char *const *) b;
-   // printf("1.%s 2.%s\n",str_a,str_b);
+    const char *str_a = *(const char *const *) a; 
+    const char *str_b = *(const char *const *) b;
 
     j = (str_a[0] == ' ') ? 1 : 0;
     for (j;str_a[j] != ' ' && str_a[j] != ','; j++)
@@ -100,7 +98,6 @@ int comp (const void *a, const void *b){
         d++;
     if (d > strlen(str_b))
         d = strlen(str_b)-2;
-   // printf("1.%d 2.%d\n",c,d);
     if(c > d)
         return 1;
     if (c < d)
