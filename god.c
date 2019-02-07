@@ -4,7 +4,7 @@
 #include <ctype.h>
 #define blue  "\033[0;34m"
 
-int readAndProcess(int *numberOfStr, char ***text);
+int readAndProcess(int *numberOfStr, char ***text); // ok
 
 int comp ( const void *a, const void *b);
 
